@@ -67,13 +67,13 @@ with gr.Blocks(title='Image AI Assistant') as demo:
                 time.sleep(0.05)
                 yield history
     with gr.Row():
-        with gr.Column(scale=0.85):
+        with gr.Column():
            
             txt = gr.Textbox(
                 show_label=False,
                 placeholder="Enter text and press enter, or upload an image",
             ).style(container=False)
-        with gr.Column(scale=0.15, min_width=0):
+        with gr.Column( min_width=0):
             btn = gr.UploadButton("📁", file_types=["image", "video", "audio"])
     def down(input):
         #print(input)

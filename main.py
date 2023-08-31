@@ -102,4 +102,4 @@ with gr.Blocks(title='Image AI Assistant') as demo:
     )
 
 demo.queue()
-demo.launch(debug=True)
+demo.launch(debug=False)

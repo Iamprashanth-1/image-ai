@@ -1,4 +1,4 @@
-cv2
+opencv-python
 g4f
 gradio
 numpy

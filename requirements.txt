@@ -1,0 +1,4 @@
+cv2
+g4f
+gradio
+numpy

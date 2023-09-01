@@ -22,7 +22,7 @@ class GPT4ALL:
 def run_python_code(_code , args_dict):
     #print(args_dict)
     _code = 'import numpy as np\n'+_code
-    #print(_code)
+    print(_code)
     try:
         exec(_code, globals(), args_dict)
 

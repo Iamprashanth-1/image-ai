@@ -11,7 +11,7 @@ abs_path = os.path.dirname(os.path.abspath(__file__))
 _IMAGE_ADDED = False
 _IMAGE_PATH = ""
 def add_text(history, text):
-    print(text)
+    #print(text)
     history = history + [(text, None)]
     return history, gr.update(value="", interactive=True)
 
@@ -27,12 +27,12 @@ def add_file(history, file):
 with gr.Blocks(title='Image AI Assistant') as demo:
     
     gr.HTML("<h1>Ask me anything about your image.</h1>")
-    chatbot = gr.Chatbot([], elem_id="Image AI" ,label='Image AI').style(height=350)
+    chatbot = gr.Chatbot([], elem_id="Image AI" ,label='Image AI').style(height=500)
     _IMAGE_ADDED = gr.State(value=False)
     _IMAGE_PATH = gr.State(value="")
 
     def bot(history):
-        print(history)
+        #print(history)
         if history[-1][0][0].endswith(".jpg") or history[-1][0][0].endswith(".png") or history[-1][0][0].endswith(".jpeg"):
             _IMAGE_ADDED.value = True
             _IMAGE_PATH.value = history[-1][0][0]
@@ -42,7 +42,7 @@ with gr.Blocks(title='Image AI Assistant') as demo:
                 history[-1][1] += character
                 time.sleep(0.05)
                 yield history
-        elif _IMAGE_ADDED:
+        elif _IMAGE_ADDED.value:
             _promt = IMAGE_AI_PROMT.format(question=history[-1][0])
             llm = GPT4ALL()
             _code = llm.call(_promt)
@@ -56,8 +56,12 @@ with gr.Blocks(title='Image AI Assistant') as demo:
             img = run_python_code(str(_code) ,{'_in_img' : str(_IMAGE_PATH.value), '_out_img' : _IMAGE_PATH.value})
             # cv2.imwrite("temp.jpg", img)
         # _IMAGE_PATH = f'{abs_path}/temp.jpg'
-            history[-1][1] = (img,None)
-            yield history
+            if img =='Something went wrong. Please try again.':
+                history[-1][1] = img
+                yield history
+            else:
+                history[-1][1] = (img,None)
+                yield history
             #response = "**Ask me Anything about your image**"
         else:
             response = "**Please Upload Image**"
@@ -67,13 +71,13 @@ with gr.Blocks(title='Image AI Assistant') as demo:
                 time.sleep(0.05)
                 yield history
     with gr.Row():
-        with gr.Column():
+        with gr.Column(scale=0.85):
            
             txt = gr.Textbox(
                 show_label=False,
                 placeholder="Enter text and press enter, or upload an image",
             ).style(container=False)
-        with gr.Column( min_width=0):
+        with gr.Column(scale=0.15, min_width=0):
             btn = gr.UploadButton("📁", file_types=["image", "video", "audio"])
     def down(input):
         #print(input)
@@ -100,6 +104,7 @@ with gr.Blocks(title='Image AI Assistant') as demo:
     file_msg = btn.upload(add_file, [chatbot, btn], [chatbot], queue=False).then(
         bot, chatbot, chatbot
     )
+    demo.queue()
+    #demo.auth("image", "12345")
 
-demo.queue()
-demo.launch(debug=False ,server_name='0.0.0.0')
+

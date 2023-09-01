@@ -1,4 +1,5 @@
 opencv-python
+fastapi
 g4f
 gradio
 numpy

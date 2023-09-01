@@ -24,7 +24,7 @@ def add_file(history, file):
 
 
 
-with gr.Blocks(title='Image AI Assistant') as demo:
+with gr.Blocks(title='Image AI Assistant',auth=('11','11')) as demo:
     
     gr.HTML("<h1>Ask me anything about your image.</h1>")
     chatbot = gr.Chatbot([], elem_id="Image AI" ,label='Image AI').style(height=500)
@@ -104,7 +104,9 @@ with gr.Blocks(title='Image AI Assistant') as demo:
     file_msg = btn.upload(add_file, [chatbot, btn], [chatbot], queue=False).then(
         bot, chatbot, chatbot
     )
-    demo.queue()
+    demo.queue(concurrency_count=10)
+    #demo.launch(auth=('image', '12345'))
+    
     #demo.auth("image", "12345")
 
 
